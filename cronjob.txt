@@ -1,0 +1,1 @@
+*/10 * * * * cd /Users/pranay/Desktop/udacity/MLOps/dynamic-risk-assessment-system && /Users/pranay/anaconda3/envs/mlmonitoring/bin/python fullprocess.py

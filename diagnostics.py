@@ -29,21 +29,30 @@ def model_predictions(test_data):
 
 ##################Function to get summary statistics
 def dataframe_summary():
-    #calculate summary statistics here
+    # mean, median, and mode for each numeric column (rubric)
     data = pd.read_csv(os.path.join(dataset_csv_path, "finaldata.csv"))
     numeric_data = data[["lastmonth_activity", "lastyear_activity", "number_of_employees"]]
 
     means = list(numeric_data.mean())
     medians = list(numeric_data.median())
-    stds = list(numeric_data.std())
+    mode_df = numeric_data.mode()
+    if len(mode_df) == 0:
+        modes = [float("nan")] * numeric_data.shape[1]
+    else:
+        modes = [float(mode_df.iloc[0][col]) for col in numeric_data.columns]
 
-    return [means, medians, stds]  # return value should be a list containing all summary statistics
+    return [means, medians, modes]
 
 
 ##################Function to get missing data percentages
 def missing_data():
+    # percent NA per numeric column (rubric)
     data = pd.read_csv(os.path.join(dataset_csv_path, "finaldata.csv"))
-    missing_percentages = list(data.isna().sum() / len(data))
+    numeric_data = data.select_dtypes(include=[np.number])
+    n = len(numeric_data)
+    if n == 0:
+        return []
+    missing_percentages = list(numeric_data.isna().sum() / n)
     return missing_percentages
 
 ##################Function to get timings

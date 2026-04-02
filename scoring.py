@@ -40,6 +40,19 @@ def score_model():
     return f1
 
 
+def score_deployed_on_ingested_data():
+    """F1 of the deployed model on the latest ingested finaldata (model drift check)."""
+    with open(os.path.join(config["prod_deployment_path"], "trainedmodel.pkl"), "rb") as f:
+        deployed_model = pickle.load(f)
+
+    data = pd.read_csv(os.path.join(dataset_csv_path, "finaldata.csv"))
+    X = data[["lastmonth_activity", "lastyear_activity", "number_of_employees"]]
+    y = data["exited"]
+
+    predictions = deployed_model.predict(X)
+    return metrics.f1_score(y, predictions)
+
+
 if __name__ == "__main__":
     score_model()
 
